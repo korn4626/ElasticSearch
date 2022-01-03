@@ -1,0 +1,34 @@
+//주별 평균
+GET index명/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "range": {
+            "일자컬럼": {
+              "gte": "2021-11-01",
+              "lte": "2022-12-08"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "size": 0,
+  "aggs":{
+    "test2": {
+      "date_histogram": {
+            "field": "일자컬럼",
+            "calendar_interval": "week"
+          },
+        "aggs": {
+          "rtn_avg": {
+            "avg":{
+              "field": "평균항목"
+            }
+          }
+        }
+      }
+    }
+}
