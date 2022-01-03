@@ -1,0 +1,61 @@
+//여러항목별 합계후 합계항목으로 정렬
+GET index명/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "range": {
+            "일자": {
+              "gte": "2021-12-01",
+              "lte": "2021-12-19"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "size": 0,
+  "aggs":{
+    "test1":{
+      "date_histogram": {
+        "field": "일자",
+        "calendar_interval": "week",
+        "format": "yyyy-MM-dd",
+        "order": {
+          "_key": "desc"
+        }
+      },
+      "aggs":{
+        "test2": {
+          "multi_terms": {
+            "terms": [
+              {
+                "field": "항목1"
+              },
+              {
+                "field": "항목2"
+              }
+            ],
+            "size":10000
+          },
+        "aggs": {
+          "val" : {
+            "sum":{
+              "field":"합계항목"
+            }
+          },
+          "sum_sort": {
+            "bucket_sort": {
+              "sort": [
+                { "val": { "order": "desc" } }
+              ],
+              "size":20
+            }
+          }
+        }
+        }
+      }
+    }
+  }
+} 
