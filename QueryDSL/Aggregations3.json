@@ -1,0 +1,52 @@
+//script이용
+//bucket_path, bucket_script이용
+GET index명/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "range": {
+            "일자": {
+              "gte": "2021-11-29",
+              "lte": "2022-06-01"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "size": 0,
+  "aggs":{
+    "test1":{
+      "terms": {
+        "script": {
+          "source": "doc['일자'].getValue().substring(0,6)" //일자 field에서는 substring오류. 단 script이용하여 term지정 가능 예제
+        },
+        "size": 1000,
+        "order":{"_key":"asc"}
+      }, 
+      "aggs": {
+        "reserved": {
+          "sum":{
+            "field":"sumfield1"
+          }
+        },
+        "capacity": {
+          "sum":{
+            "field":"sumfield2"
+          }
+        },
+        "rate":{ 
+            "bucket_script":{
+              "buckets_path": {
+                "res": "reserved",
+                "cap": "capacity"
+            },
+            "script": "params.res / params.cap * 100"
+          }
+        }
+      }
+    }
+  }
+}
