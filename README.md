@@ -5,7 +5,7 @@ ElasticSearch 사용 예제 코드
 ElasticSearch용 쿼리 예제
 - [주별평균-Datehistogram 이용][dsl1]
 - [주별합계-여러항목(multiTerms)이용, 합계항목으로 정렬][dsl2]
-- [terms에 script 이용, 합계 결과를 이용한 결과][dsl3]
+- [terms에 script 이용, 합계 결과를 이용한 추가 계산식 사용][dsl3]
 
 
 
